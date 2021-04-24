@@ -61,7 +61,7 @@ def main():
     bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
     matches = sorted(bf.match(des1, des2), key=lambda match: match.distance)
 
-    # # Plot keypoints
+    # Plot keypoints
     # img4 = cv2.drawKeypoints(img1, kp1, outImage=None)
     # img5 = cv2.drawKeypoints(img2, kp2, outImage=None)
     # f, axarr = plt.subplots(1, 2)
@@ -73,7 +73,7 @@ def main():
     # plt.imshow(img3)
     # plt.show()
 
-    # Calculate score
+    # Calculate score test
     score = 0
     for match in matches:
         score += match.distance
