@@ -18,7 +18,7 @@ _CDN_PATH = 'cdn/'
 
 def threshold_apply(image):
     # Threshold (identify the white black pixel by near method and convert in white or black absolute)
-    ret, image = cv2.threshold(
+    _, image = cv2.threshold(
         image, 127, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
     # Normalize to 0 and 1 range
     image[image == 255] = 1
@@ -33,16 +33,16 @@ def convert_to_array(image):
 
 def harris_corners_apply(image):
     # Harris corners
-    harris_corners = cv2.cornerHarris(image, 3, 3, 0.04)
-    harris_normalized = cv2.normalize(
-        harris_corners, 0, 255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32FC1)
-    return harris_normalized
+    harris_corners_arr = cv2.cornerHarris(image, 3, 3, 0.04)
+    harris_normalized_arr = cv2.normalize(
+        harris_corners_arr, 0, 255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32FC1)
+    return harris_normalized_arr
 
-def extract_keypoint(harris_normalized):
+def extract_keypoint(harris_normalized_arr):
     keypoints = []
-    for x in range(0, harris_normalized.shape[0]):
-        for y in range(0, harris_normalized.shape[1]):
-            if harris_normalized[x][y] > _FRONTIER:
+    for x in range(0, harris_normalized_arr.shape[0]):
+        for y in range(0, harris_normalized_arr.shape[1]):
+            if harris_normalized_arr[x][y] > _FRONTIER:
                 keypoints.append(cv2.KeyPoint(y, x, 1))
     return keypoints
 
