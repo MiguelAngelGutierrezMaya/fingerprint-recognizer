@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  django: &django
+    build:
+      context: .
+      dockerfile: ./compose/production/django/Dockerfile
+    image: python_fingerprint_recognitionp_backend_production_django
+    container_name: python_fingerprint_recognition
+    volumes:
+      - .:/app
+    env_file:
+      - ./.envs/.production/.django
+      - ./.envs/.production/.postgres
+    expose:
+      - 80
+    external_links:
+      - postgres-prod:postgres
+    networks:
+      - contenedores
+    environment:
+      - "VIRTUAL_HOST=python-fingerprint-recognition.co"
+      - "LETSENCRYPT_HOST=python-fingerprint-recognition.co"
+    command: /start
+
+networks:
+  contenedores:
+    external: true

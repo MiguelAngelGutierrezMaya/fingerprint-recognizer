@@ -1,0 +1,20 @@
+# General
+DJANGO_APP_URL=https://test.tiptopenglish.co
+DJANGO_MEDIA_URL=https://api-test.tiptopenglish.co
+DJANGO_SETTINGS_MODULE=service_backend.settings.production
+DJANGO_SECRET_KEY=#6dxjx!y%m589ey=yl%ntu&i2t(l$skom6ox+5_v#_fxrj-%cq
+DJANGO_ADMIN_URL=admin/
+DJANGO_DEBUG=False
+DJANGO_ALLOWED_HOSTS=localhost
+DJANGO_CORS_ORIGIN_WHITELIST=
+
+DJANGO_NEW_PASSWORD=S3rv1c3
+
+# Notifier Email
+ENABLE_STUDENT_NOTIFICATIONS=False
+NOTIFIER_EMAIL=
+NOTIFIER_NAME=
+USERNAME_SMTP=
+PASSWORD_SMTP=
+HOST_SMTP=
+PORT_SMTP=
