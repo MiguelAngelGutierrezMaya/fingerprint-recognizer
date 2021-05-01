@@ -42,5 +42,6 @@ drf-friendly-errors==0.13
 #Req for core service
 numpy==1.19.0
 opencv-python==4.5.1.48
+scipy==1.6.3
+matplotlib==3.4.1
 fingerprint_enhancer
-

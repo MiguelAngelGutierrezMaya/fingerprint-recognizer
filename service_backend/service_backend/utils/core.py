@@ -1,19 +1,25 @@
 # Python dependencies
 import cv2
 import os
+import shutil
 import sys
 import numpy
+
+# Django conf
+from django.conf import settings
 
 # Python libraries
 import matplotlib.pyplot as plt
 import fingerprint_enhancer
 
-os.chdir("./")
+# Utils
+from service_backend.utils.svd import svd_image
 
+# Const vars
 _FRONTIER = 125  # Define frontier when the filtered image have color pixel white or black
 _ALLOW_ERROR_THRESHOLD = 10
-_DATABASE_PATH = 'fingerprintColorImageDatabase.v1/'
-_CDN_PATH = 'cdn/'
+_DATABASE_PATH = settings.MEDIA_ROOT + '/users/'
+_CDN_PATH = settings.MEDIA_ROOT + '/tmp/'
 
 
 def threshold_apply(image):
@@ -94,19 +100,30 @@ def draw_points(images_list, kp_list, matches):
     plt.show()
 
 
-def compare_image(file):
+def compare_image(name, useSVD):
 
-    img1 = cv2.imread(_DATABASE_PATH + '/sub2/22.jpg', cv2.IMREAD_GRAYSCALE)
-    # img1 = cv2.imread( _CDN_PATH + filename, cv2.IMREAD_GRAYSCALE)
+    if useSVD:
+        # User SDV form to convert image big in small
+        name = svd_image(name)
+
+    img1 = cv2.imread(_CDN_PATH + name, cv2.IMREAD_GRAYSCALE)
+
     kp1, des1 = get_descriptors(img1)
-
-    is_searching = True
+    dirName_finded = None
     is_coinciding = False
 
     for dirName, subdirList, fileList in os.walk(_DATABASE_PATH):
         for filename in fileList:
-            print(dirName + '/' + filename)
-            img2 = cv2.imread(dirName + '/' + filename, cv2.IMREAD_GRAYSCALE)
+
+            path = dirName + '/' + filename
+
+            if useSVD:
+                # User SDV form to convert image big in small
+                shutil.copyfile(dirName + '/' + filename, _CDN_PATH + filename)
+                path = _CDN_PATH + svd_image(filename)
+                remove_file(filename)
+
+            img2 = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
             kp2, des2 = get_descriptors(img2)
 
             # Matching between descriptors
@@ -117,15 +134,11 @@ def compare_image(file):
             is_coinciding = calculate_score(matches)
 
             if (is_coinciding):
-                print('Coincide')
-                is_searching = False
+                dirName_finded = dirName
                 break
-            else:
-                print('No Coincide')
-                pass
 
-        if (not is_searching):
+        if (is_coinciding):
             break
 
-    # remove_file(file.name)
-    return is_coinciding
+    remove_file(name)
+    return {'status': is_coinciding, 'user_name': None if dirName_finded == None else dirName_finded.split('/')[-1]}

@@ -25,27 +25,41 @@ La configuración de las variables de entorno se explican a continuación:
 
 #Proceso de instalación
 Verificar la instalación de la base de datos postgresql y configurar las credenciales en los archivos de entorno (desarrollo o producción)
+en caso de no estar instalada, ejecutar el siguiente comando
+
+`$ docker run --detach --name postgres-dev --network=contenedores -e POSTGRES_PASSWORD=t00r -e VIRTUAL_HOST=postgres-dev -v [local-path]:/var/lib/postgresql/data -p 5433:5432 postgres:12`
+
+Verificar que la red contenedores se encuentre creada y la [local-path] sea una ruta local con accesos de escritura y lectura
 
 Ejecutar el siguiente comando (tener en cuenta el entorno en el que se encuentra, desarrollo o producción):
 
-`$ docker-compose -f docker-compose.production.yml up -d --build`
+`$ docker-compose -f docker-compose.local.yml build`
 
 Establecer las migraciones iniciales
 
-`$ docker-compose -f docker-compose.production.yml run --rm django python manage.py migrate`
+`$ docker-compose -f docker-compose.local.yml run --rm django python manage.py migrate`
 
 Agregar los primeros datos requeridos por defecto en la Base de datos para las tablas roles, documentos, ciudades, estados y paises
 
 Crear el usuario superadmin
 
-`$ docker-compose -f docker-compose.production.yml run --rm django python manage.py createsuperuser`
+`$ docker-compose -f docker-compose.local.yml run --rm django python manage.py createsuperuser`
 
 Si te encuentras en la instalación en un entorno de producción, debes configurar las tareas programadas en el servicio cron del vps, un ejemplo se muestra a continuación:
 
 `$ crontab -e`
 
-Pegar el texto que se encuentra en el archivo `.cronjobs` de la carpeta `.envs/.production/` al final
+Pegar el texto que se encuentra en el archivo `.cronjobs` de la carpeta `.envs/.local/` al final
 
 Reinicializar el servicio de tareas
 
 `$ sudo service cron restart`
+
+Ejecución del proyecto en local
+
+`$ docker-compose -f docker-compose.local.yml up`
+
+Se levanta una instancia por defecto en http://localhost:9000
+de no ser así verificar en que puerto está corriendo el proyecto, para ello se puede hacer uso del siguiente comando
+
+`$ docker ps`

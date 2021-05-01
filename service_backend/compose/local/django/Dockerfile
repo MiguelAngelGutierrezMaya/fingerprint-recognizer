@@ -21,7 +21,9 @@ RUN apt-get update \
   # Translations dependencies
   && apt-get install -y gettext \
   # https://docs.djangoproject.com/en/dev/ref/django-admin/#dbshell
-  && apt-get install -y postgresql-client
+  && apt-get install -y postgresql-client \
+  # libGL
+  && apt-get install ffmpeg libsm6 libxext6  -y
 
 # Requirements are installed here to ensure they will be cached.
 COPY ./requirements /requirements
