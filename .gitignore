@@ -1,2 +1,4 @@
 database/*
 fingerprintColorImageDatabase.v1/*
+service_backend/media/users/*
+service_backend/media/tmp/*
